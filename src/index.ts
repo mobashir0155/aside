@@ -29,6 +29,7 @@ const cli = meow(
     --no, -n      Assume no for every prompt
     --script-dev  Script ID for dev environment
     --script-prod Script ID for production environment
+    --ts          Use TypeScript
 
     Examples
     $ @google/aside init -y
@@ -48,6 +49,10 @@ const cli = meow(
       no: {
         type: 'boolean',
         alias: 'n',
+      },
+      ts: {
+        type: 'boolean',
+        alias: 'ts',
       },
     },
   }
