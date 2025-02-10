@@ -17,6 +17,50 @@
 
 import { PackageJson } from 'type-fest';
 
+export const configForJs: {
+  dependencies: string[];
+  scripts: PackageJson.Scripts;
+  filesCopy: Record<string, string>;
+  filesMerge: Record<string, string>;
+} = {
+  dependencies: [
+    '@google/clasp',
+    'eslint',
+    'eslint-config-prettier',
+    'eslint-plugin-prettier',
+    'jest',
+    'license-check-and-add',
+    'ncp',
+    'prettier',
+    'rimraf',
+  ],
+  scripts: {
+    'lint':
+      'npm run license && eslint --fix --no-error-on-unmatched-pattern "src/**/*.{js,ts}" "test/**/*.{js,ts}"',
+    'license': 'license-check-and-add add -f license-config.json',
+    'test': 'jest test/ --passWithNoTests --detectOpenHandles',
+    'deploy':
+      'npm run lint && npm run test && ncp .clasp-dev.json .clasp.json && clasp push -f',
+    'deploy:prod':
+      'npm run lint && npm run test && ncp .clasp-prod.json .clasp.json && clasp push',
+  },
+  filesCopy: {
+    '.editorconfig': '.editorconfig',
+    '.eslintrc.json': '.eslintrc.json',
+    '.prettierrc.json': '.prettierrc.json',
+    'jest.config.json': 'jest.config.json',
+    'LICENSE': 'LICENSE',
+    'license-config.json': 'license-config.json',
+    'license-header.txt': 'license-header.txt',
+  },
+  filesMerge: {
+    '.gitignore-target': '.gitignore',
+    '.claspignore': '.claspignore',
+    '.eslintignore': '.eslintignore',
+    '.prettierignore': '.prettierignore',
+  },
+};
+
 export const config: {
   dependencies: string[];
   scripts: PackageJson.Scripts;

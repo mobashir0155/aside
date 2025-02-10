@@ -23,7 +23,7 @@ import { fileURLToPath } from 'url';
 import writeFileAtomic from 'write-file-atomic';
 
 import { ClaspHelper } from './clasp-helper.js';
-import { config, configForUi } from './config.js';
+import { config, configForJs, configForUi } from './config.js';
 import { PackageHelper } from './package-helper.js';
 
 /**
@@ -42,7 +42,7 @@ export interface Options {
   yes: boolean;
   no: boolean;
   title: string;
-  ui: boolean;
+  ts: boolean;
 }
 
 /**
@@ -262,44 +262,6 @@ async function handleConfigCopy(options: Options) {
 }
 
 /**
- * Handle putting template files in place.
- *
- * @param {Options} options
- */
-async function handleTemplate(options: Options) {
-  const cwd = process.cwd();
-  let templates;
-  if (options.ui) {
-    templates = path.join(__dirname, '../../template-ui');
-  } else {
-    templates = path.join(__dirname, '../../template');
-  }
-
-  const items = await fs.readdir(templates);
-
-  for (const item of items) {
-    const targetDirName = path.join(cwd, item);
-
-    // Create folder
-    fs.mkdirSync(targetDirName, { recursive: true });
-
-    // Only install the template if no ts files exist in target directory.
-    const files = fs.readdirSync(targetDirName);
-    const tsFiles = files.filter((file: string) =>
-      file.toLowerCase().endsWith('.ts')
-    );
-
-    // Copy files
-    if (tsFiles.length === 0) {
-      console.log(`${chalk.green('\u2714')}`, `Installing ${item} template...`);
-      await fs.copy(path.join(templates, item), targetDirName, {
-        overwrite: false,
-      });
-    }
-  }
-}
-
-/**
  * Set up clasp.
  *
  * @param {Options} options
@@ -326,13 +288,17 @@ async function handleClasp(options: Options) {
     options
   );
 
+  let rootDir = 'dist';
+  if (!options.ts) {
+    rootDir = './';
+  }
   // Prepare clasp project environment
   if (scriptIdDev) {
     console.log(`${chalk.green('\u2714')}`, `Cloning ${scriptIdDev}...`);
-    await claspHelper.cloneAndPull(scriptIdDev, scriptIdProd, 'dist');
+    await claspHelper.cloneAndPull(scriptIdDev, scriptIdProd, rootDir);
   } else {
     console.log(`${chalk.green('\u2714')}`, `Creating ${options.title}...`);
-    const res = await claspHelper.create(options.title, scriptIdProd, './dist');
+    const res = await claspHelper.create(options.title, scriptIdProd, rootDir);
 
     // Output URLs
     console.log();
@@ -350,6 +316,7 @@ export async function init(
     title: string | undefined;
     yes: boolean | undefined;
     no: boolean | undefined;
+    ts: boolean | undefined;
   } & Record<string, unknown>
 ) {
   const projectTitle =
@@ -363,15 +330,13 @@ export async function init(
     yes: flags.yes || false,
     no: flags.no || false,
     title: projectTitle,
-    ui: flags.no || false,
+    ts: flags.ts || false,
   };
 
-  options.ui = await query('', 'Create an Angular UI?', false, options);
-
-  if (options.ui) {
-    CONFIG = configForUi;
-  } else {
+  if (options.ts) {
     CONFIG = config;
+  } else {
+    CONFIG = configForJs;
   }
 
   // Handle package.json
@@ -384,16 +349,8 @@ export async function init(
   await handleConfigMerge(options);
 
   // Handle template
-  await handleTemplate(options);
+  // await handleTemplate(options);
 
   // Handle clasp
   await handleClasp(options);
-
-  if (options.ui) {
-    console.log();
-    console.log(
-      'Make sure to run npm install to install all the Angular UI dependencies'
-    );
-    console.log();
-  }
 }
