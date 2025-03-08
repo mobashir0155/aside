@@ -30,7 +30,6 @@ const cli = meow(
     --script-dev  Script ID for dev environment
     --script-prod Script ID for production environment
     --ts          Use TypeScript
-    --gs          Use Google Apps Script
 
     Examples
     $ mobashir-aside init -y
@@ -55,11 +54,6 @@ const cli = meow(
         type: 'boolean',
         alias: 'ts',
         default: true,
-      },
-      gs: {
-        type: 'boolean',
-        alias: 'gs',
-        default: false,
       },
     },
   }
