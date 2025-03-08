@@ -199,4 +199,41 @@ export class ClaspHelper {
 
     await writeFileAtomic(filename, JSON.stringify(claspConfig));
   }
+
+  /**
+   * Change file extension.
+   *
+   * @param {string} filePath
+   * @param {string} ext
+   */
+  changeFileExtension(filePath: string, ext: string) {
+    const directory = path.dirname(filePath);
+    const fileNameWithoutExt = path.basename(filePath, path.extname(filePath));
+    const newFilePath = path.join(directory, `${fileNameWithoutExt}.${ext}`);
+
+    fs.renameSync(filePath, newFilePath);
+    console.log(`Changed: ${filePath} -> ${newFilePath}`);
+  }
+
+  /**
+   * Change file extensions in a directory.
+   *
+   * @param {string} directory
+   * @param {string} oldExt
+   * @param {string} newExt
+   */
+  changeExtensionsInDirectory(
+    directory: string,
+    oldExt: string,
+    newExt: string
+  ) {
+    const files = fs.readdirSync(directory);
+
+    files.forEach(file => {
+      if (path.extname(file) === `.${oldExt}`) {
+        const filePath = path.join(directory, file);
+        this.changeFileExtension(filePath, newExt);
+      }
+    });
+  }
 }

@@ -23,7 +23,7 @@ import { fileURLToPath } from 'url';
 import writeFileAtomic from 'write-file-atomic';
 
 import { ClaspHelper } from './clasp-helper.js';
-import { config, configForJs, configForUi } from './config.js';
+import { config, configForJs } from './config.js';
 import { PackageHelper } from './package-helper.js';
 
 /**
@@ -288,10 +288,10 @@ async function handleClasp(options: Options) {
     options
   );
 
-  let rootDir = 'dist';
-  if (!options.ts) {
-    rootDir = './';
-  }
+  const rootDir = 'dist';
+  // if (!options.ts) {
+  //   rootDir = '.';
+  // }
   // Prepare clasp project environment
   if (scriptIdDev) {
     console.log(`${chalk.green('\u2714')}`, `Cloning ${scriptIdDev}...`);
@@ -317,6 +317,7 @@ export async function init(
     yes: boolean | undefined;
     no: boolean | undefined;
     ts: boolean | undefined;
+    gs: boolean | undefined;
   } & Record<string, unknown>
 ) {
   const projectTitle =
@@ -326,11 +327,18 @@ export async function init(
       no: flags.no,
     } as Options));
 
+  const isTsProject =
+    flags.ts ??
+    (await query('', 'Use TypeScript?', true, {
+      yes: flags.yes,
+      no: flags.no,
+    } as Options));
+
   const options: Options = {
     yes: flags.yes || false,
     no: flags.no || false,
     title: projectTitle,
-    ts: flags.ts || false,
+    ts: isTsProject,
   };
 
   if (options.ts) {
@@ -339,6 +347,7 @@ export async function init(
     CONFIG = configForJs;
   }
 
+  console.log(options);
   // Handle package.json
   await handlePackageJson(options);
 

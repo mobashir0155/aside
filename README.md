@@ -13,7 +13,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-
 # Apps Script in IDE (ASIDE)
 
 [![NPM Version](https://img.shields.io/npm/v/@google/aside)](https://www.npmjs.com/package/@google/aside)
@@ -25,6 +24,10 @@ limitations under the License.
 Apps Script in IDE (ASIDE) supports modern, robust and scalable Apps Script development by providing a framework for a local coding environment capable of formatting, linting, testing and much more.
 
 Here are the main features:
+
+- **Javascript**
+
+  Write your code in plain javascript if you have some projects built in javascript
 
 - **TypeScript**
 
@@ -70,9 +73,6 @@ After running the `init` command above, ASIDE will go ahead and do the following
 
   ASIDE is using [clasp](https://github.com/google/clasp) to pull and push code from and to Apps Script
 
-- **(Optionally) Create an Angular Material UI**
-
-  ASIDE will run the necessary commands to create an Angular application with Angular Material components, if the option is chosen
 
 ## Options
 
@@ -89,6 +89,10 @@ You can provide the `init` command with some convenience options:
 - `--title`/ `-t`
 
   Set project title without being asked for it
+
+- `--ts`
+
+  Choose if you want to create project in Typescript
 
 - `--script-dev`
 
