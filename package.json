@@ -1,5 +1,5 @@
 {
-  "name": "@google/aside",
+  "name": "mobashir-aside",
   "version": "1.4.4",
   "type": "module",
   "description": "Apps Script IDE framework",
@@ -24,7 +24,7 @@
     "template",
     "template-ui"
   ],
-  "repository": "google/aside",
+  "repository": "mobashir0155/aside",
   "main": "index.js",
   "scripts": {
     "clean": "rimraf build",
@@ -45,7 +45,7 @@
   "engines": {
     "node": ">=14"
   },
-  "author": "Google Inc.",
+  "author": "Mobashir",
   "license": "Apache-2.0",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.1",

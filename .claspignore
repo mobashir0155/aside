@@ -1,0 +1,9 @@
+.editorconfig
+.eslintrc.json
+.prettierrc.json
+jest.config.json
+LICENSE
+license-config.json
+license-header.txt
+rollup.config.mjs
+tsconfig.json

@@ -5,3 +5,6 @@ build/
 .clasp*.json
 *.tgz
 .vscode/
+
+# Track all files inside src
+!/dist/*
